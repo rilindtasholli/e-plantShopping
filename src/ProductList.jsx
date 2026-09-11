@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import "./ProductList.css";
 import CartItem from "./CartItem";
@@ -11,6 +11,12 @@ function ProductList({ onHomeClick }) {
   const [addedToCart, setAddedToCart] = useState({});
 
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+  const calculateTotalQuantity = () => {
+    return cartItems
+      ? cartItems.reduce((total, item) => total + item.quantity, 0)
+      : 0;
+  };
 
   const plantsArray = [
     {
@@ -304,6 +310,7 @@ function ProductList({ onHomeClick }) {
     e.preventDefault();
     setShowCart(false);
   };
+
   return (
     <div>
       <div className="navbar" style={styleObj}>
@@ -332,6 +339,9 @@ function ProductList({ onHomeClick }) {
             {" "}
             <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
               <h1 className="cart">
+                <span className="cart_quantity_count">
+                  {calculateTotalQuantity() ? calculateTotalQuantity() : ""}
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
